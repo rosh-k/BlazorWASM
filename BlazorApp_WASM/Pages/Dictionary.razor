@@ -1,0 +1,90 @@
+﻿@page "/dictionary/{value}"
+
+<PageTitle>Dictionary</PageTitle>
+
+@*@using English2Gurung.Data*@
+@using MudBlazor
+@*@inject TranslateService TranslateService*@
+@inject HttpClient Http
+<MudContainer>
+    
+    @if (_resultTranslate is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else
+    {          
+        <MudText Typo="Typo.h6">Search result for letters starting @Value</MudText>
+     <MudTable Items="@_resultTranslate" Dense="@dense" Hover="@hover" Bordered="@bordered" Striped="@striped" Filter="new Func<Translate,bool>(FilterFunc1)" @bind-SelectedItem="selectedItem1">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Gurung to English Dictionary</MudText>
+        <MudSpacer />
+        <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+    </ToolBarContent>
+    <HeaderContent>
+       <MudTh>Name</MudTh>
+            <MudTh>Value</MudTh> 
+            <MudTh>Nepali</MudTh> 
+            <MudTh>Description</MudTh> 
+    </HeaderContent>
+    <RowTemplate>
+         <MudTd DataLabel="Nr">@context.GurungKey</MudTd>
+            <MudTd DataLabel="Sign">@context.EnglishValue</MudTd>
+            <MudTd DataLabel="Name">@context.NepaliValue</MudTd>
+            <MudTd DataLabel="Position">@context.Description</MudTd>
+    </RowTemplate>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>
+
+    }
+
+</MudContainer>
+
+
+@code {
+    [Parameter]
+    public string Value { get; set; }
+    private MudTable<Translate> _table;
+    private List<Translate>? _resultTranslate;
+    private bool dense = false;
+    private bool hover = true;
+    private bool striped = false;
+    private bool bordered = false;
+    private string searchString1 = "";
+    private Translate selectedItem1 = null;
+    private HashSet<Translate> selectedItems = new HashSet<Translate>();
+
+    private bool FilterFunc1(Translate element) => FilterFunc(element, searchString1);
+
+    private bool FilterFunc(Translate element, string searchString)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+        if (element.GurungKey.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (element.EnglishValue.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;     
+        return false;
+    }
+
+    private void PageChanged(int i)
+    {
+        _table.NavigateTo(i - 1);
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {        
+        string key = Value;        
+        string filePath = @"\sample-data\";
+        string fileName = $"{Value}.json";
+        string fullFileName = $"{filePath}{fileName}";
+        string test1 = System.IO.Directory.GetCurrentDirectory();       
+        _resultTranslate = await Http.GetFromJsonAsync<List<Translate>>(fullFileName);
+        if (_resultTranslate is null)
+        {
+            return;
+        }
+    }            
+}

@@ -1,0 +1,21 @@
+﻿<MudBreadcrumbs Items="_items">
+    <ItemTemplate Context="item">
+        <MudLink Href="@item.Href" Class="mr-1" Color="Color.Tertiary">@item.Text</MudLink>         
+    </ItemTemplate>  
+    <SeparatorTemplate>
+         |   
+    </SeparatorTemplate>
+</MudBreadcrumbs>
+@code {
+    private List<BreadcrumbItem> _items = new List<BreadcrumbItem>();    
+
+    protected override async Task OnInitializedAsync()
+    {
+        for (char c = 'A'; c <= 'Z'; c++)
+        {
+            
+            await Task.Run(() => _items.Add(new BreadcrumbItem(c.ToString(),href:$"/Dictionary/{c}")));
+        }
+    
+    }
+}
