@@ -14,7 +14,7 @@
         for (char c = 'A'; c <= 'Z'; c++)
         {
             
-            await Task.Run(() => _items.Add(new BreadcrumbItem(c.ToString(),href:$"BlazorWASM/Dictionary/{c}")));
+            await Task.Run(() => _items.Add(new BreadcrumbItem(c.ToString(),href:$"Dictionary/{c}")));
         }
     
     }
