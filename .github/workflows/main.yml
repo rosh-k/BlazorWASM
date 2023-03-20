@@ -23,9 +23,9 @@ jobs:
     - name: Publish .NET BlazorWASM project
       run: dotnet publish BlazorAppWASM/BlazorAppWASM.csproj -c Release -o release --nologo
     
-    # changes the base-tag in index.html from '/' to 'BlazorAppWASM' to match GitHub Pages repository subdirectory
-    - name: Change base-tag in index.html from / to BlazorAppWASM
-      run: sed -i 's/<base href="\/" \/>/<base href="\/BlazorAppWASM\/" \/>/g' release/wwwroot/index.html
+    # changes the base-tag in index.html from '/' to 'BlazorWASM' to match GitHub Pages repository subdirectory
+    - name: Change base-tag in index.html from / to BlazorWASM
+      run: sed -i 's/<base href="\/" \/>/<base href="\/BlazorWASM\/" \/>/g' release/wwwroot/index.html
    
     # copy index.html to 404.html to serve the same file when a file is not found
     - name: copy index.html to 404.html
