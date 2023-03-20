@@ -1,4 +1,4 @@
-﻿namespace BlazorApp_WASM.Pages
+﻿namespace BlazorAppWASM.Pages
 {
     public class Translate
     {
